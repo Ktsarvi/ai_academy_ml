@@ -1,0 +1,195 @@
+% =====================================================================
+% AI Academy -- National AI Center -- MLE-AI-201 Machine Learning
+% HW1 (Weeks 1-2) REPORT TEMPLATE
+%
+% This template imitates the IEEE two-column conference format WITHOUT
+% depending on IEEEtran.cls or any special class file. It uses only the
+% article class and packages that ship with every TeX distribution
+% (geometry, graphicx, amsmath, amssymb). It compiles with pdflatex or
+% tectonic out of the box.
+%
+% HOW TO USE:
+%   1. Fill in the title block (your name + student ID).
+%   2. Replace every [FILL IN ...] with your own content.
+%   3. Put your plots in ../figures/ and include them with \includegraphics.
+%   4. Compile:  pdflatex report_template.tex   (run twice for references)
+%      or:       tectonic report_template.tex
+%   5. Rename the output to report.pdf before submitting.
+% =====================================================================
+
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+% ---- Minimal, always-available packages only -------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[letterpaper,margin=0.75in,columnsep=0.25in]{geometry}
+\usepackage{times}          % Times-like font, to mimic the IEEE look
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\graphicspath{{figures/}{../figures/}}
+
+% ---- Imitate the IEEE section styling by hand (no titlesec) ----------
+\renewcommand{\thesection}{\Roman{section}}
+\renewcommand{\thesubsection}{\Alph{subsection}}
+\makeatletter
+% Centered, small-caps section headings: "I. Introduction"
+\renewcommand\section{\@startsection{section}{1}{\z@}%
+  {3.5ex plus 1ex minus .2ex}{1.8ex plus .2ex}%
+  {\centering\normalfont\normalsize\scshape}}
+% Italic left-aligned subsection headings: "A. Subsection"
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+  {3.0ex plus 1ex minus .2ex}{1.0ex plus .2ex}%
+  {\normalfont\normalsize\itshape}}
+\makeatother
+
+% Tighter caption look, IEEE-ish
+\renewcommand{\figurename}{Fig.}
+\setlength{\parindent}{1em}
+
+% =====================================================================
+\begin{document}
+
+% ---- TITLE BLOCK (spans both columns) -------------------------------
+\twocolumn[
+  \begin{center}
+    {\LARGE\bfseries KNN, Metrics, and Regression from Scratch\par}
+    \vspace{1.2em}
+    {\large [FILL IN: Your Name]\par}
+    \vspace{0.3em}
+    {\normalsize Student ID: [FILL IN] \quad\textbullet\quad Date: [FILL IN]\par}
+    \vspace{0.3em}
+    {\itshape MLE-AI-201 Machine Learning, Cohort II\\ AI Academy, National AI Center\par}
+    \vspace{1.4em}
+  \end{center}
+]
+
+% ---- ABSTRACT (IEEE style: bold-italic "Abstract" em-dash) ----------
+\noindent\textbf{\textit{Abstract}}---\textit{%
+[FILL IN: 3--5 sentences. State what you implemented (KNN, four metrics,
+linear and logistic regression), the datasets used, your headline
+numbers (e.g.\ best $k$ and test F$_1$; linear-regression test $R^2$;
+logistic-regression test accuracy), and whether your from-scratch code
+matched scikit-learn.]%
+}
+
+\vspace{0.6em}
+\noindent\textbf{\textit{Index Terms}}---\textit{k-nearest neighbors,
+classification metrics, linear regression, logistic regression,
+gradient descent, regularization.}
+
+\vspace{0.8em}
+
+% =====================================================================
+\section{Introduction}
+[FILL IN: One short paragraph. What is the goal of this assignment and
+what will the reader find in this report? Mention that every algorithm
+is implemented in NumPy and validated against scikit-learn.]
+
+% =====================================================================
+\section{KNN and Metrics}
+\subsection{KNN implementation}
+[FILL IN: Describe how you vectorized the Euclidean distance (no Python
+loop over training points). One or two sentences plus the key equation
+if helpful.]
+
+The pairwise squared distance can be expanded as
+\begin{equation}
+  \lVert \mathbf{x}-\mathbf{z}\rVert_2^2
+  = \lVert \mathbf{x}\rVert_2^2 - 2\,\mathbf{x}^\top\mathbf{z}
+  + \lVert \mathbf{z}\rVert_2^2 .
+\end{equation}
+
+\subsection{Metrics implementation}
+[FILL IN: Briefly state how you computed accuracy, precision, recall,
+and F$_1$ from the confusion-matrix counts, and how you handled the
+zero-denominator edge case.]
+
+\subsection{Results}
+[FILL IN: Report the metric-vs-$k$ sweep and the best $k$ by F$_1$.
+Reference the table and figure below. Confirm the match with
+scikit-learn.]
+
+% ---- Example table (plain tabular, no booktabs dependency) ----------
+\begin{table}[h]
+  \centering
+  \caption{Test-set metrics for the best $k$ (breast cancer).}
+  \label{tab:knn}
+  \begin{tabular}{lcccc}
+    \hline
+    Model & Acc & Prec & Rec & F$_1$ \\
+    \hline
+    Your KNN ($k{=}$[..]) & [..] & [..] & [..] & [..] \\
+    sklearn KNN           & [..] & [..] & [..] & [..] \\
+    \hline
+  \end{tabular}
+\end{table}
+
+% ---- Example figure -------------------------------------------------
+\begin{figure}[h]
+  \centering
+  % \includegraphics[width=\linewidth]{knn_sweep.pdf}
+  \fbox{\parbox[c][3.2cm][c]{0.9\linewidth}{\centering\itshape
+    [FILL IN: replace this box with\\ \texttt{\textbackslash includegraphics\{knn\_sweep.pdf\}}]}}
+  \caption{Validation F$_1$ as a function of $k$.}
+  \label{fig:knn}
+\end{figure}
+
+% =====================================================================
+\section{Linear and Logistic Regression}
+\subsection{Linear regression}
+[FILL IN: Describe your batch gradient-descent update, learning rate,
+and number of epochs. Report test-set MSE and $R^2$ on the diabetes
+dataset and compare with scikit-learn.]
+
+The mean-squared-error objective and its gradient are
+\begin{equation}
+  J(\mathbf{w},b) = \frac{1}{N}\lVert \mathbf{X}\mathbf{w}+b-\mathbf{y}\rVert_2^2,
+  \quad
+  \nabla_{\mathbf{w}}J = \frac{2}{N}\mathbf{X}^\top(\mathbf{X}\mathbf{w}+b-\mathbf{y}).
+\end{equation}
+
+\subsection{Logistic regression}
+[FILL IN: Describe your cross-entropy gradient descent on the breast
+cancer dataset. Report test-set accuracy, precision, recall, and F$_1$
+(reuse your Part 1 metrics) and compare with scikit-learn.]
+
+The sigmoid and cross-entropy gradient are
+\begin{equation}
+  \sigma(z)=\frac{1}{1+e^{-z}},
+  \quad
+  \nabla_{\mathbf{w}}J=\frac{1}{N}\mathbf{X}^\top(\hat{\mathbf{p}}-\mathbf{y}).
+\end{equation}
+
+\subsection{Training curves}
+[FILL IN: Show and briefly discuss the loss-vs-epoch curves for both
+models. A decreasing curve confirms the learning rate is sensible.]
+
+% =====================================================================
+\section{Bonus: Regularization (optional)}
+[FILL IN, only if attempted. State clearly which bonus(es) you did.
+For L1: show that a large $\lambda$ drives some weights toward zero.
+For L2: show that weights shrink smoothly. Report how the weight norm
+and test performance change with $\lambda$.]
+
+% =====================================================================
+\section{Conclusion}
+[FILL IN: 2--3 sentences. What worked, what surprised you, and where
+your from-scratch results differed from scikit-learn (and why).]
+
+% =====================================================================
+\section*{AI-Tool Usage Declaration}
+[FILL IN: Name any AI tool used, what you used it for, which parts it
+affected, and how you checked the output. Write "No AI tools used." if
+that is the case. This declaration is required by the syllabus.]
+
+% =====================================================================
+\begin{thebibliography}{9}
+\bibitem{islp} G.~James, D.~Witten, T.~Hastie, R.~Tibshirani, and J.~Taylor,
+  \textit{An Introduction to Statistical Learning with Applications in Python}. Springer, 2023.
+\bibitem{esl} T.~Hastie, R.~Tibshirani, and J.~Friedman,
+  \textit{The Elements of Statistical Learning}, 2nd ed. Springer, 2009.
+\bibitem{sklearn} F.~Pedregosa et al., ``Scikit-learn: Machine learning in Python,''
+  \textit{JMLR}, vol.~12, pp.~2825--2830, 2011.
+\end{thebibliography}
+
+\end{document}
