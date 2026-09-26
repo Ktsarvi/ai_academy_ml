@@ -79,13 +79,13 @@ fn = np.sum((y_pred != pos) & (y_true == pos))
 
 **Task: sweep k, produce plot, confirm parity with sklearn.**
 
-- [ ] Load breast cancer, `train_test_split(random_state=42)`, standardize (fit on train)
-- [ ] Loop `k ∈ {1, 3, 5, 7, 9, 11, 15, 21}`:
+- [x] Load breast cancer, `train_test_split(random_state=42)`, standardize (fit on train)
+- [x] Loop `k ∈ {1, 3, 5, 7, 9, 11, 15, 21}`:
   - Fit your `KNN(k)` → predict → compute your 4 metrics
   - Fit `sklearn KNeighborsClassifier(k)` → `assert np.array_equal(yours, sklearn_preds)`
   - `assert abs(your_metric - sklearn_metric) < 1e-9` for each metric
-- [ ] Print best k by F₁
-- [ ] **Plot** (required by rubric):
+- [x] Print best k by F₁
+- [x] **Plot** (required by rubric):
   - x-axis: k values, y-axis: metric value
   - 4 lines: accuracy, precision, recall, F₁
   - Save → `figures/knn_metrics_vs_k.png`
