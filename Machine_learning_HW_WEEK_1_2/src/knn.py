@@ -15,8 +15,9 @@ class KNN:
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> "KNN":
         """Memorize the training data. Returns self."""
-        # TODO: store X and y as float / int arrays.
-        raise NotImplementedError
+        self.X_train = X.astype(float)
+        self.y_train = y.astype(int)
+        return self
 
     def _distances(self, X: np.ndarray) -> np.ndarray:
         """Return the (n_queries, n_train) matrix of Euclidean distances.
@@ -24,12 +25,16 @@ class KNN:
         Hint: ||x - z||^2 = ||x||^2 - 2 x.z + ||z||^2 lets you build the
         whole matrix with matrix multiplication and broadcasting.
         """
-        # TODO: implement the vectorized pairwise distance.
-        raise NotImplementedError
+        sq_X = np.sum(X**2, axis=1, keepdims=True)
+        sq_XT = np.sum(self.X_train**2, axis=1, keepdims=True).T
+        cross_prods = X @ self.X_train.T
+        dist = sq_X - 2 * cross_prods + sq_XT
+        return np.sqrt(np.maximum(dist, 0))
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """Predict a label for each row of X by majority vote of the k
         nearest training points."""
-        # TODO: use self._distances, np.argpartition/np.argsort, and a
-        # majority vote over the k nearest labels.
-        raise NotImplementedError
+        D = self._distances(X)
+        k_indices = np.argpartition(D, self.k, axis=1)[:, : self.k]
+        k_labels = self.y_train[k_indices]
+        return np.array([np.bincount(row).argmax() for row in k_labels])
