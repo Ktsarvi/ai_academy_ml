@@ -96,7 +96,7 @@ fn = np.sum((y_pred != pos) & (y_true == pos))
 
 **Task: batch gradient descent on MSE, diabetes dataset.**
 
-- [ ] **`fit(X, y)`**:
+- [x] **`fit(X, y)`**:
   ```python
   np.random.seed(42)
   N, p = X.shape
@@ -117,10 +117,10 @@ fn = np.sum((y_pred != pos) & (y_true == pos))
 
 **Create `src/run_linear.py`:**
 
-- [ ] Load diabetes, standardize, split (`random_state=42`)
-- [ ] Fit `LinearRegression(lr=0.1, epochs=1000)`, plot loss → `figures/linear_loss.png`
-- [ ] Compute test MSE and R² (`1 - SS_res/SS_tot`)
-- [ ] Compare vs `sklearn.linear_model.LinearRegression`, explain gap (GD vs closed-form)
+- [x] Load diabetes, standardize, split (`random_state=42`)
+- [x] Fit `LinearRegression(lr=0.1, epochs=1000)`, plot loss → `figures/linear_loss.png`
+- [x] Compute test MSE and R² (`1 - SS_res/SS_tot`)
+- [x] Compare vs `sklearn.linear_model.LinearRegression`, explain gap (GD vs closed-form)
 
 ---
 

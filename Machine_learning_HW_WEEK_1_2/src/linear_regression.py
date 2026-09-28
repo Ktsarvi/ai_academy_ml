@@ -29,9 +29,24 @@ class LinearRegression:
     def fit(self, X: np.ndarray, y: np.ndarray) -> "LinearRegression":
         """Fit w, b with batch gradient descent on the MSE objective.
         Append the loss each epoch to self.loss_history."""
-        # TODO: initialize w, b; loop epochs; compute predictions,
-        # gradients (add the penalty term for the bonus), update w and b.
-        raise NotImplementedError
+        np.random.seed(42)
+        N, p = X.shape
+        self.w = np.zeros(p)
+        self.b = 0.0
+        for _ in range(self.epochs):
+            y_hat = X @ self.w + self.b
+            loss = np.mean((y_hat - y) ** 2)
+            self.loss_history.append(loss)
+            grad_w = (2 / N) * X.T @ (y_hat - y)
+            grad_b = (2 / N) * np.sum(y_hat - y)
+
+            if self.penalty == "l1":
+                grad_w += self.lam * np.sign(self.w)
+            elif self.penalty == "l2":
+                grad_w += 2 * self.lam * self.w
+            self.w -= self.lr * grad_w
+            self.b -= self.lr * grad_b
+        return self
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         return X @ self.w + self.b
