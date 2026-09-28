@@ -15,8 +15,8 @@ class LinearRegression:
         self,
         lr: float = 0.1,
         epochs: int = 1000,
-        penalty: str | None = None,   # None | "l1" | "l2"  (bonus)
-        lam: float = 0.0,             # regularization strength (bonus)
+        penalty: str | None = None,  # None | "l1" | "l2"  (bonus)
+        lam: float = 0.0,  # regularization strength (bonus)
     ) -> None:
         self.lr = lr
         self.epochs = epochs
@@ -34,5 +34,4 @@ class LinearRegression:
         raise NotImplementedError
 
     def predict(self, X: np.ndarray) -> np.ndarray:
-        # TODO: return X @ w + b.
-        raise NotImplementedError
+        return X @ self.w + self.b

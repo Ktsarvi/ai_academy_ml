@@ -113,7 +113,7 @@ fn = np.sum((y_pred != pos) & (y_true == pos))
       self.w -= self.lr * grad_w;  self.b -= self.lr * grad_b
   return self
   ```
-- [ ] **`predict(X)`**: `return X @ self.w + self.b`
+- [x] **`predict(X)`**: `return X @ self.w + self.b`
 
 **Create `src/run_linear.py`:**
 
