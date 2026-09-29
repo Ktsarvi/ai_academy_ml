@@ -1,0 +1,339 @@
+% =====================================================================
+% AI Academy -- National AI Center
+% MLE-AI-201 Machine Learning (AI Engineering, Module 2) -- Cohort II
+% Homework 1 (Weeks 1--2): KNN & Metrics; Linear & Logistic Regression
+% Compiles with pdfLaTeX or tectonic.
+% =====================================================================
+
+\documentclass[11pt,a4paper]{article}
+
+% ===== CONFIGURATION (single source of truth) ========================
+\newcommand{\coursecode}{MLE-AI-201}
+\newcommand{\coursename}{Machine Learning}
+\newcommand{\institution}{AI Academy, National AI Center}
+\newcommand{\cohort}{Cohort II}
+\newcommand{\semester}{Fall 2026}
+\newcommand{\hwnumber}{1}
+\newcommand{\hwtitle}{KNN \& Metrics, Linear \& Logistic Regression from Scratch}
+\newcommand{\releasedate}{September 20, 2026}
+\newcommand{\duedate}{October 4, 2026 at 23:59 (UTC+4)}
+\newcommand{\totalpoints}{100}
+\newcommand{\bonuspoints}{10}
+\newcommand{\estimatedtime}{8--10 hours}
+\newcommand{\version}{v1.0}
+
+% ===== PACKAGES ======================================================
+\usepackage[margin=2.2cm,headheight=15pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[final,protrusion=true,expansion=false]{microtype}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{enumitem}
+\usepackage[parfill]{parskip}
+\usepackage{listings}
+\usepackage[most]{tcolorbox}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[hidelinks]{hyperref}
+
+\emergencystretch=3em
+\hbadness=10000
+\hfuzz=2pt
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=NavyBlue,
+  urlcolor=NavyBlue,
+  citecolor=NavyBlue,
+  pdftitle={\coursecode\ Homework \hwnumber: KNN, Metrics, Linear and Logistic Regression},
+  pdfauthor={\institution}
+}
+
+% ===== STYLING =======================================================
+\definecolor{accent}{HTML}{0B3D91}      % deep navy
+\definecolor{accent2}{HTML}{8B0000}     % dark red for warnings
+\definecolor{soft}{HTML}{F2F4F8}        % soft background
+
+\titleformat{\section}
+  {\Large\bfseries\color{accent}}{\thesection.}{0.6em}{}
+\titleformat{\subsection}
+  {\large\bfseries\color{accent}}{\thesubsection}{0.5em}{}
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\color{accent!85!black}}{\thesubsubsection}{0.4em}{}
+
+% ===== CUSTOM COMMANDS ===============================================
+\newcommand{\TODO}[1]{\textcolor{accent2}{\textbf{[TODO: #1]}}}
+\newcommand{\points}[1]{\textcolor{accent}{\textbf{[#1 pts]}}}
+\newcommand{\bonus}[1]{\textcolor{ForestGreen}{\textbf{[+#1 bonus]}}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\xx}{\mathbf{x}}
+\newcommand{\ww}{\mathbf{w}}
+\newcommand{\yy}{\mathbf{y}}
+\newcommand{\XX}{\mathbf{X}}
+
+% ===== CALLOUT BOXES =================================================
+\newtcolorbox{infobox}[1][]{
+  colback=soft, colframe=accent, boxrule=0.6pt,
+  arc=2pt, left=8pt, right=8pt, top=6pt, bottom=6pt,
+  fonttitle=\bfseries\color{white},
+  colbacktitle=accent, title=#1
+}
+\newtcolorbox{warnbox}[1][]{
+  colback=accent2!5, colframe=accent2, boxrule=0.6pt,
+  arc=2pt, left=8pt, right=8pt, top=6pt, bottom=6pt,
+  fonttitle=\bfseries\color{white},
+  colbacktitle=accent2, title=#1
+}
+\newtcolorbox{rubricbox}{
+  colback=white, colframe=black!40, boxrule=0.4pt,
+  arc=1pt, left=8pt, right=8pt, top=4pt, bottom=4pt,
+  fontupper=\small
+}
+
+% ===== CODE LISTING STYLE ===========================================
+\definecolor{codegreen}{rgb}{0,0.55,0}
+\definecolor{codegray}{rgb}{0.4,0.4,0.4}
+\definecolor{codepurple}{rgb}{0.55,0,0.78}
+\definecolor{backcolour}{rgb}{0.97,0.97,0.97}
+
+\lstdefinestyle{python}{
+  language=Python,
+  backgroundcolor=\color{backcolour},
+  commentstyle=\color{codegreen},
+  keywordstyle=\color{accent},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=6pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  frame=single,
+  framerule=0.4pt,
+  rulecolor=\color{black!30},
+}
+
+% ===== HEADER / FOOTER ===============================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{\coursecode\ -- HW\hwnumber}}
+\fancyhead[R]{\small\textit{\cohort\ -- \semester}}
+\fancyfoot[L]{\small\textit{\institution}}
+\fancyfoot[R]{\small Page \thepage\ of \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% =====================================================================
+\begin{document}
+
+% ===== COVER =========================================================
+\begin{center}
+{\small \textsc{\institution} \\[0.2em] \textsc{\coursecode\ -- \coursename\ -- AI Engineering (Module 2) -- \cohort}}\\[1.2em]
+{\Large\bfseries\color{accent} Homework \hwnumber\ (Weeks 1--2)}\\[0.3em]
+{\LARGE\bfseries \hwtitle}\\[1em]
+\rule{0.85\textwidth}{0.6pt}
+\end{center}
+
+\begin{tabularx}{\textwidth}{@{}lXlX@{}}
+\textbf{Released:} & \releasedate & \textbf{Due:} & \textcolor{accent2}{\textbf{\duedate}} \\
+\textbf{Points:} & \totalpoints\ + \bonuspoints\ bonus & \textbf{Est.\ time:} & \estimatedtime \\
+\textbf{Version:} & \version & \textbf{Submission:} & Single \texttt{.zip} on Moodle \\
+\end{tabularx}
+
+\vspace{0.4em}\hrule\vspace{0.6em}
+
+% ===== AT-A-GLANCE BOX ===============================================
+\begin{infobox}[At a glance]
+\textbf{Prerequisites.} Lectures from Week 1 (\textsc{Intro \& ML Landscape}) and Week 2 (\textsc{Supervised Learning I}). Comfort with \texttt{NumPy}, vectors, norms, gradients, and basic probability.
+
+\smallskip\textbf{What you will build.} Four core algorithms in NumPy \emph{from scratch}, each trained on a small built-in \texttt{scikit-learn} dataset and compared against the library implementation:
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=2.2em, topsep=2pt, itemsep=1pt]
+  \item $k$-Nearest Neighbors (classification).
+  \item The classification metrics: accuracy, precision, recall, F$_1$.
+  \item Linear regression (gradient descent).
+  \item Logistic regression (gradient descent).
+\end{enumerate}
+
+\smallskip\textbf{Deliverables.} A single \texttt{.zip} containing (i)~a PDF report built from \texttt{report\_template.tex} ($\le$ 6 pages), (ii)~your completed code in \texttt{src/}, (iii)~a signed \texttt{pledge.txt}.
+\end{infobox}
+
+% ===== SECTION 1: LOGISTICS ==========================================
+\section{Logistics}\label{sec:logistics}
+
+\subsection{This is HW1 (Weeks 1--2)}
+Per the syllabus, each homework covers two weeks and requires \textbf{an algorithm implemented from scratch \emph{and} its library equivalent, with the results compared and any discrepancy explained}. HW1 carries \textbf{10 marks: 8 for this submission and 2 for a short live check} in the lab session after the deadline, where you talk through your own code. The bonus below can raise the submission mark but the total is capped at 8.
+
+\subsection{Collaboration policy}
+You may discuss concepts at a high level with classmates, but the work you submit must be your own: no sharing of code, plots, or written analysis, even partial. Acknowledge any collaborator by name at the top of your report.
+
+\subsection{AI / LLM tool policy}
+AI assistants may be used for homework. \textbf{Any use must be declared in your submission}: name the tool, what you used it for, which parts it affected, and how you checked the output. You must be able to explain and reproduce your work without AI --- the live check is closed-book. Submitting code you cannot explain results in \textbf{zero credit on the affected component}.
+
+\subsection{Late policy}
+Late work is \emph{capped, not deducted}: up to and including 24h late is capped at 80\%; more than 24h and up to 48h is capped at 60\%; more than 48h scores 0 unless documented and pre-approved. The bands do not overlap. Extensions must be requested \emph{before} the deadline via \texttt{mle-ai-201-staff@aiacademy.edu.az}.
+
+\subsection{Reproducibility}
+Seed every random operation with \texttt{np.random.seed(42)}. We spot-check by re-running submissions; results that do not reproduce lose up to 5 points.
+
+% ===== SECTION 2: BACKGROUND =========================================
+\section{Background}
+
+\subsection{$k$-Nearest Neighbors}
+KNN is a non-parametric classifier: there is no training beyond memorizing the data. For a query $\xx\in\R^p$ it finds the $k$ nearest training points by Euclidean distance and returns the majority label:
+\[
+  \hat{y}(\xx)=\arg\max_{c}\sum_{i\in\mathcal{N}_k(\xx)}\mathbf{1}\{y^{(i)}=c\},
+  \qquad
+  d(\xx,\yy)=\sqrt{\textstyle\sum_{j}(x_j-y_j)^2}.
+\]
+
+\subsection{Classification metrics}
+With TP, FP, TN, FN counts,
+\[
+  \text{Acc}=\frac{\text{TP}+\text{TN}}{\text{TP}+\text{TN}+\text{FP}+\text{FN}},\quad
+  \text{Prec}=\frac{\text{TP}}{\text{TP}+\text{FP}},
+\]
+\[
+  \text{Rec}=\frac{\text{TP}}{\text{TP}+\text{FN}},\quad
+  \text{F}_1=\frac{2\cdot\text{Prec}\cdot\text{Rec}}{\text{Prec}+\text{Rec}}.
+\]
+
+\subsection{Linear regression}
+Model $\hat{y}=\XX\ww+b$. Minimize mean squared error
+$J(\ww,b)=\frac{1}{N}\lVert \XX\ww+b-\yy\rVert_2^2$ by gradient descent:
+\[
+  \nabla_{\ww}J=\tfrac{2}{N}\XX^\top(\XX\ww+b-\yy),\qquad
+  \partial_b J=\tfrac{2}{N}\textstyle\sum_i(\hat{y}_i-y_i).
+\]
+
+\subsection{Logistic regression}
+Model $\hat{p}=\sigma(\XX\ww+b)$ with $\sigma(z)=1/(1+e^{-z})$. Minimize binary cross-entropy
+$J=-\frac{1}{N}\sum_i\big[y_i\log\hat{p}_i+(1-y_i)\log(1-\hat{p}_i)\big]$; the gradient has the same clean form:
+\[
+  \nabla_{\ww}J=\tfrac{1}{N}\XX^\top(\hat{p}-\yy),\qquad
+  \partial_b J=\tfrac{1}{N}\textstyle\sum_i(\hat{p}_i-y_i).
+\]
+
+% ===== SECTION 3: SETUP ==============================================
+\section{Setup}
+
+\subsection{Environment}
+Python 3.11 with \texttt{numpy}, \texttt{matplotlib}, and \texttt{scikit-learn} (used for datasets and sanity checks only), plus \texttt{pytest}. A \texttt{requirements.txt} is included.
+
+\subsection{Datasets (all built into scikit-learn --- no downloads)}
+\begin{itemize}[topsep=2pt,itemsep=1pt]
+  \item \textbf{Classification} (Parts 1 \& 2.2): \texttt{sklearn.datasets.load\_breast\_cancer} --- a binary target, 30 numeric features.
+  \item \textbf{Regression} (Part 2.1): \texttt{sklearn.datasets.load\_diabetes} --- a continuous target, 10 numeric features.
+\end{itemize}
+Always split with \texttt{train\_test\_split(..., random\_state=42)} and standardize features (fit the scaler on the training split only).
+
+\subsection{Directory layout (provided)}
+\begin{lstlisting}[style=python,language=bash,numbers=none,basicstyle=\ttfamily\small]
+Machine_learning_HW_WEEK_1_2/
+|-- statement.pdf          # this file
+|-- report_template.tex    # fill this in, compile to report.pdf
+|-- report.pdf             # <-- you add this
+|-- requirements.txt
+|-- README.md
+|-- pledge.txt             # sign it
+|-- src/
+|   |-- knn.py                  # Part 1
+|   |-- metrics.py              # Part 1
+|   |-- linear_regression.py    # Part 2.1 (+ bonus)
+|   |-- logistic_regression.py  # Part 2.2 (+ bonus)
+|-- tests/
+|   |-- test_knn.py
+|   |-- test_metrics.py
+|-- figures/               # any plots referenced in the report
+\end{lstlisting}
+
+% ===== SECTION 4: PROBLEMS ===========================================
+\section{Problems}
+
+% -------- PART 1 --------
+\subsection{Part 1 --- KNN \& Metrics \points{50}}\label{sec:p1}
+Use the \textbf{breast cancer} dataset throughout Part 1. Fill in the stubs in \texttt{src/knn.py} and \texttt{src/metrics.py}. \textbf{Do not use \texttt{sklearn} except for loading data and the explicit sanity checks.}
+
+\begin{enumerate}[label=\textbf{1.\arabic*},leftmargin=2.4em,itemsep=4pt]
+  \item \textbf{KNN from scratch. \points{20}} Complete the \texttt{KNN} class (\texttt{fit}, \texttt{predict}) using vectorized NumPy for the Euclidean distance. \textbf{No Python \texttt{for} loop over training points.} Support an integer hyperparameter \texttt{k}.
+
+  \item \textbf{Metrics from scratch. \points{20}} In \texttt{src/metrics.py} implement \texttt{accuracy}, \texttt{precision}, \texttt{recall}, and \texttt{f1\_score} from the confusion-matrix counts. Handle the zero-denominator edge case (return \texttt{0.0}).
+
+  \item \textbf{Train, evaluate, compare. \points{10}} Train your KNN for $k\in\{1,3,5,7,9,11,15,21\}$, evaluate all four metrics on the test set, and report the best $k$ by F$_1$. Confirm your predictions match \texttt{sklearn.neighbors.KNeighborsClassifier} with the same $k$, and that your metrics match \texttt{sklearn.metrics} within $10^{-9}$.
+\end{enumerate}
+
+\begin{rubricbox}
+\textbf{Part 1 rubric.} A Python loop over training points in 1.1 loses 4 pts. Metrics that disagree with \texttt{sklearn.metrics} lose 4 pts. A plot or table of the metric-vs-$k$ sweep is required for 1.3.
+\end{rubricbox}
+
+% -------- PART 2 --------
+\subsection{Part 2 --- Linear \& Logistic Regression \points{50}}\label{sec:p2}
+Fill in the stubs in \texttt{src/linear\_regression.py} and \texttt{src/logistic\_regression.py}. Both must train by \textbf{gradient descent} (no normal equations, no \texttt{sklearn} for the core fit).
+
+\begin{enumerate}[label=\textbf{2.\arabic*},leftmargin=2.4em,itemsep=4pt]
+  \item \textbf{Linear regression from scratch. \points{25}} On the \textbf{diabetes} dataset, implement \texttt{LinearRegression} with \texttt{fit} (batch gradient descent) and \texttt{predict}. Train it, plot the training-loss curve (MSE vs.\ epoch), and report test-set MSE and $R^2$. Compare against \texttt{sklearn.linear\_model.LinearRegression} and explain any gap.
+
+  \item \textbf{Logistic regression from scratch. \points{25}} On the \textbf{breast cancer} dataset, implement \texttt{LogisticRegression} with \texttt{fit} (gradient descent on cross-entropy), \texttt{predict\_proba}, and \texttt{predict}. Train it, plot the loss curve, and report test-set accuracy, precision, recall, and F$_1$ (reuse your Part 1 metrics). Compare against \texttt{sklearn.linear\_model.LogisticRegression} and explain any gap.
+\end{enumerate}
+
+\begin{rubricbox}
+\textbf{Part 2 rubric.} Using the normal equation or \texttt{sklearn} for the core fit loses 10 pts. Both loss curves must show a monotonically decreasing trend; a diverging loss usually means the learning rate is too high or features are unscaled.
+\end{rubricbox}
+
+% -------- BONUS --------
+\subsection*{Bonus --- Regularization \bonus{10}}
+Add regularization to \emph{either} regressor (a \texttt{penalty}/\texttt{lambda} argument in its \texttt{fit}). Report how the learned weight norm and test performance change as \texttt{lambda} varies.
+\begin{itemize}[topsep=2pt,itemsep=1pt]
+  \item \bonus{5}\ \textbf{L1 (Lasso).} Add $\lambda\lVert\ww\rVert_1$ to the loss; the (sub)gradient adds $\lambda\,\mathrm{sign}(\ww)$. Show that large $\lambda$ drives some weights to (near) zero.
+  \item \bonus{5}\ \textbf{L2 (Ridge).} Add $\lambda\lVert\ww\rVert_2^2$ to the loss; the gradient adds $2\lambda\ww$. Show that it shrinks weights smoothly toward zero.
+\end{itemize}
+Do \emph{not} regularize the bias term. State clearly in the report which bonus(es) you attempted.
+
+% ===== SECTION 5: SUBMISSION =========================================
+\section{Submission}\label{sec:submission}
+\subsection{Checklist}
+\begin{itemize}[topsep=2pt,itemsep=1pt]
+  \item[$\square$] \texttt{report.pdf} ($\le$ 6 pages) built from \texttt{report\_template.tex}, with your name, ID, and date.
+  \item[$\square$] \texttt{src/} contains your completed \texttt{knn.py}, \texttt{metrics.py}, \texttt{linear\_regression.py}, \texttt{logistic\_regression.py}.
+  \item[$\square$] \texttt{pytest} runs cleanly on the provided tests.
+  \item[$\square$] Every random call is seeded; results reproduce.
+  \item[$\square$] \texttt{pledge.txt} is signed and dated; AI use is declared.
+\end{itemize}
+
+\subsection{Format}
+A single \texttt{.zip} named \texttt{lastname\_firstname\_hw1.zip} uploaded to Moodle.
+
+% ===== SECTION 6: HONOR PLEDGE =======================================
+\section{Honor Pledge}\label{sec:pledge}
+Copy the following into \texttt{pledge.txt} and sign with your name and the date:
+
+\begin{tcolorbox}[colback=soft, colframe=black!50, boxrule=0.4pt, arc=1pt]
+\small
+\textit{I, [Name], affirm that the work in this submission is my own. I have not shared or received code, plots, or written analysis for this assignment. Where I used AI assistants, I did so only as permitted by the AI/LLM policy in \S\ref{sec:logistics}, and I have declared that use. I can explain every line of code and every paragraph of writing in my submission. \\[6pt]
+Signed: \rule{6cm}{0.4pt} \quad Date: \rule{2.5cm}{0.4pt}}
+\end{tcolorbox}
+
+% ===== REFERENCES ====================================================
+\section*{References}
+\begin{enumerate}[label={[\arabic*]},leftmargin=2.4em,itemsep=2pt]
+  \item James, Witten, Hastie, Tibshirani \& Taylor. \emph{An Introduction to Statistical Learning with Applications in Python} --- Ch.\ 2--4. \href{https://www.statlearning.com}{statlearning.com}.
+  \item Hastie, Tibshirani \& Friedman. \emph{The Elements of Statistical Learning}, 2nd ed. --- Ch.\ 3 (linear methods), Ch.\ 13 (KNN).
+  \item scikit-learn developers. \emph{User Guide}. \href{https://scikit-learn.org/stable/}{scikit-learn.org}.
+\end{enumerate}
+
+\vspace{1em}\hrule\vspace{0.6em}
+\noindent\small\textit{End of Homework~\hwnumber. Good luck --- implement it yourself, then let the library check your work.}
+
+\end{document}
