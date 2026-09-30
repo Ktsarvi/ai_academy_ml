@@ -5,6 +5,6 @@ AI/LLM policy in the assignment statement, and I have declared that use in
 my report. I can explain every line of code and every paragraph of writing
 in my submission.
 
-AI-tool usage: Used an LLM to look up NumPy broadcasting syntax and matplotlib plotting code;
+AI-tool usage: Used an LLM to look up NumPy broadcasting syntax, matplotlib plotting code, and LaTeX formatting/syntax commands.
 
-Signed: Teymur Alasgarov     Date: 29.09.2026
+Signed: Alasgarov Teymur    Date: 30.09.2026
